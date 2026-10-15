@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SURAKSHA NER – Landslide & Flood Intelligence | Team Echo Engineers</title>
+<meta name="description" content="SURAKSHA NER: a prototype for landslide and flood early warning, citizen hazard reports and safer-route awareness in Northeast India. Maharishi University 7th Convocation 2026.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --sky:#eaf4fd; --paper:#f7fbff; --navy:#0f2a5c; --blue:#1f5fbf; --teal:#0e9aa7;
+  --maroon:#9b1b30; --red:#d9382f; --amber:#e8a317; --green:#2e9e5b; --ink:#16233b; --muted:#5a6b85;
+  --line:#cfe0f2;
+  --head:'Bricolage Grotesque','Segoe UI',system-ui,sans-serif;
+  --body:'Figtree','Segoe UI',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--body);color:var(--ink);background:linear-gradient(180deg,var(--sky),var(--paper) 40%,var(--sky));line-height:1.6;font-size:17px}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--blue);outline-offset:3px;border-radius:4px}
+.wrap{width:min(1080px,92%);margin:0 auto}
+h1,h2,h3{font-family:var(--head);line-height:1.1;color:var(--navy)}
+section{padding:64px 0}
+
+/* top bar */
+.topbar{background:#fff;border-bottom:1px solid var(--line)}
+.topbar .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0;flex-wrap:wrap}
+.uni{font-family:var(--head);font-weight:800;color:var(--maroon);font-size:1.25rem;line-height:1}
+.uni small{display:block;font-weight:500;font-size:.8rem;color:var(--muted);margin-top:4px;font-family:var(--body)}
+.topbar nav{display:flex;gap:22px;font-weight:600;font-size:.95rem}
+.topbar nav a{text-decoration:none;color:var(--navy)}
+.topbar nav a:hover{color:var(--blue)}
+
+/* hero */
+.hero{padding:72px 0 56px;text-align:center}
+.event{display:inline-flex;flex-wrap:wrap;justify-content:center;gap:6px 22px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:10px 24px;font-weight:600;color:var(--navy);font-size:.95rem}
+.hero .shield{width:92px;height:auto;margin:36px auto 12px;display:block}
+.hero h1{font-size:clamp(3rem,10vw,6.4rem);font-weight:800;letter-spacing:-.02em}
+.hero h1 span{color:var(--blue)}
+.tagline{margin-top:14px;font-weight:600;color:var(--navy);font-size:1.1rem}
+.tagline i{font-style:normal;color:var(--teal);margin:0 .6em}
+.lede{max-width:60ch;margin:20px auto 0;color:var(--muted)}
+.cta{display:flex;gap:12px;justify-content:center;margin-top:30px;flex-wrap:wrap}
+.btn{display:inline-block;padding:13px 26px;border-radius:10px;font-weight:700;text-decoration:none;font-family:var(--head)}
+.btn.primary{background:var(--navy);color:#fff}
+.btn.primary:hover{background:var(--blue)}
+.btn.ghost{border:2px solid var(--navy);color:var(--navy)}
+.btn.ghost:hover{background:var(--navy);color:#fff}
+
+/* presented by */
+.presented{background:var(--navy);color:#fff;padding:30px 0;text-align:center}
+.presented p{opacity:.75;font-size:.9rem}
+.presented h3{color:#fff;font-size:1.4rem;margin:6px 0 4px}
+.presented span{opacity:.85;font-size:.95rem}
+
+/* three columns */
+.trio{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:28px}
+.panel h2{font-size:1.4rem;margin-bottom:12px;display:flex;align-items:center;gap:10px}
+.panel h2 b{width:12px;height:12px;border-radius:50%;display:inline-block}
+.challenge{border-top:5px solid var(--red)} .challenge h2 b{background:var(--red)}
+.solution{border-top:5px solid var(--blue)} .solution h2 b{background:var(--blue)}
+.features{border-top:5px solid var(--green)} .features h2 b{background:var(--green)}
+.panel p{color:var(--muted)}
+.proto{margin-top:14px;font-weight:600;color:var(--navy)}
+.flist{list-style:none;display:grid;gap:12px}
+.flist li{display:flex;gap:12px;align-items:flex-start}
+.flist svg{flex:none;width:30px;height:30px;padding:6px;border-radius:9px;background:#e4f5f1;stroke:var(--teal)}
+.flist strong{display:block;color:var(--navy);line-height:1.2}
+.flist span{font-size:.9rem;color:var(--muted)}
+
+/* dashboard mock */
+.sec-head{max-width:640px;margin-bottom:28px}
+.sec-head h2{font-size:clamp(1.8rem,4vw,2.6rem)}
+.sec-head p{color:var(--muted);margin-top:10px}
+.dash{display:grid;grid-template-columns:190px 1fr;background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:0 20px 50px -25px rgba(15,42,92,.35)}
+.side{background:var(--navy);color:#cfe0f7;padding:18px 14px;font-size:.82rem;display:grid;gap:4px;align-content:start}
+.side b{color:#fff;font-family:var(--head);font-size:1rem;margin-bottom:10px}
+.side span{padding:7px 10px;border-radius:7px}
+.side span.on{background:var(--blue);color:#fff}
+.main{padding:18px}
+.main h3{font-size:1rem;margin-bottom:12px}
+.stats{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:14px}
+.stat{border:1px solid var(--line);border-radius:9px;padding:8px 10px;font-size:.7rem;color:var(--muted);line-height:1.3}
+.stat strong{display:block;font-family:var(--head);font-size:1.5rem;color:var(--navy)}
+.row{display:grid;grid-template-columns:1.5fr 1fr;gap:14px}
+.map{min-height:230px;border-radius:12px;position:relative;overflow:hidden;
+  background:
+   radial-gradient(circle at 28% 42%,rgba(217,56,47,.95) 0 6%,rgba(240,150,40,.8) 12%,rgba(255,224,90,.45) 22%,transparent 32%),
+   radial-gradient(circle at 70% 30%,rgba(217,56,47,.9) 0 5%,rgba(240,150,40,.75) 11%,rgba(255,224,90,.4) 20%,transparent 30%),
+   radial-gradient(circle at 62% 78%,rgba(217,56,47,.9) 0 6%,rgba(240,150,40,.75) 12%,rgba(255,224,90,.4) 22%,transparent 32%),
+   linear-gradient(135deg,#cfe8d9,#e8f3dc 50%,#cfe3ef)}
+.map::after{content:"Risk map (illustration)";position:absolute;left:10px;top:8px;font-size:.72rem;font-weight:600;color:var(--navy);background:#ffffffcc;padding:2px 8px;border-radius:6px}
+.zone{border:1px solid var(--line);border-radius:12px;padding:14px;font-size:.82rem}
+.zone .score{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.ring{width:62px;height:62px;border-radius:50%;background:conic-gradient(var(--red) 0 71%,#e6edf6 0);display:grid;place-items:center;flex:none}
+.ring b{width:48px;height:48px;border-radius:50%;background:#fff;display:grid;place-items:center;font-family:var(--head);font-size:1.2rem;color:var(--navy)}
+.bar{display:grid;grid-template-columns:1fr auto;gap:2px 8px;margin-top:8px;font-size:.78rem}
+.bar i{grid-column:1/-1;height:5px;border-radius:3px;background:#e6edf6;position:relative;overflow:hidden}
+.bar i::after{content:"";position:absolute;inset:0;width:var(--w);background:var(--blue)}
+.caption{margin-top:12px;font-size:.88rem;color:var(--muted)}
+
+/* phones */
+.phones{display:flex;gap:28px;justify-content:center;flex-wrap:wrap}
+.phone{width:240px;background:#0d1b36;border-radius:34px;padding:10px;box-shadow:0 20px 40px -20px rgba(15,42,92,.5)}
+.screen{background:#fff;border-radius:26px;min-height:420px;padding:16px 14px;font-size:.8rem}
+.screen h4{font-family:var(--head);color:var(--navy);font-size:.95rem;margin-bottom:10px}
+.cond{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.cond div{background:#eef5fd;border-radius:9px;padding:8px;font-size:.75rem;color:var(--muted)}
+.cond b{display:block;color:var(--navy);font-size:1rem}
+.alertbtn{background:var(--red);color:#fff;border-radius:10px;padding:10px;font-weight:600;margin-bottom:10px;line-height:1.3}
+.item{display:flex;gap:8px;align-items:center;border:1px solid var(--line);border-radius:9px;padding:8px;margin-top:6px}
+.item::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--amber);flex:none}
+.item.hi::before{background:var(--red)}
+.capture{border:2px dashed var(--line);border-radius:12px;padding:22px 10px;text-align:center;color:var(--blue);font-weight:600;margin:10px 0}
+.field{border:1px solid var(--line);border-radius:9px;padding:8px;margin-top:8px;color:var(--muted)}
+.next{background:var(--blue);color:#fff;border-radius:9px;padding:10px;text-align:center;font-weight:600;margin-top:14px}
+.phone-cap{text-align:center;margin-top:10px;font-weight:600;color:var(--navy);font-size:.9rem}
+
+/* video */
+.video-sec{background:var(--navy);color:#fff}
+.video-sec h2{color:#fff}
+.video-sec .sec-head p{color:#b9cdea}
+.player{position:relative;aspect-ratio:16/9;border-radius:16px;overflow:hidden;background:#000;box-shadow:0 30px 60px -30px #000}
+.player iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.vlinks{margin-top:18px;display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.vlinks .btn.ghost{border-color:#fff;color:#fff}
+.vlinks .btn.ghost:hover{background:#fff;color:var(--navy)}
+.vlinks small{color:#b9cdea}
+
+/* team */
+.team{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.member{background:#fff;border:1px solid var(--line);border-radius:16px;padding:28px 20px;text-align:center}
+.avatar{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--teal));color:#fff;display:grid;place-items:center;font-family:var(--head);font-weight:800;font-size:1.5rem;margin:0 auto 14px}
+.member h3{font-size:1.2rem}
+.member p{color:var(--muted);font-size:.95rem;margin-top:4px}
+.teamname{font-family:var(--head);font-size:clamp(1.8rem,4vw,2.6rem);color:var(--navy);margin-bottom:28px;text-align:center}
+
+footer{background:#fff;border-top:1px solid var(--line);padding:30px 0;text-align:center;color:var(--muted);font-size:.9rem}
+footer a{color:var(--blue);font-weight:600}
+
+@media (max-width:860px){
+  .trio,.team{grid-template-columns:1fr}
+  .dash{grid-template-columns:1fr}.side{display:none}
+  .stats{grid-template-columns:repeat(3,1fr)}
+  .row{grid-template-columns:1fr}
+  .topbar nav{display:none}
+  section{padding:48px 0}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+.notice{background:#fff7e0;border-bottom:1px solid #f0d78a;color:#5b4300;text-align:center;padding:10px 0;font-size:.95rem;font-weight:500}
+.flow{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;list-style:none;counter-reset:s}
+.flow li{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 16px;counter-increment:s;position:relative}
+.flow li::before{content:counter(s);display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--navy);color:#fff;font-family:var(--head);font-weight:700;margin-bottom:10px}
+.flow strong{display:block;color:var(--navy);font-family:var(--head);line-height:1.2;margin-bottom:4px}
+.flow span{font-size:.9rem;color:var(--muted)}
+.details{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.chips span{background:#e4eefb;color:var(--navy);border-radius:999px;padding:5px 14px;font-size:.9rem;font-weight:600}
+.status{list-style:none;display:grid;gap:10px;margin-top:6px}
+.status li{display:flex;gap:10px;color:var(--muted)}
+.status li::before{content:"";flex:none;width:10px;height:10px;border-radius:50%;margin-top:9px;background:var(--amber)}
+.status li.ok::before{background:var(--green)}
+@media (max-width:860px){.flow{grid-template-columns:1fr}.details{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="notice" role="note">Preview page: the full working prototype will go live at this same address soon.</div>
+<header class="topbar">
+  <div class="wrap">
+    <div class="uni">Maharishi University<small>7th Convocation 2026</small></div>
+    <nav aria-label="Page sections">
+      <a href="#project">Project</a><a href="#how">How it works</a><a href="#video">Demo video</a><a href="#details">Details</a><a href="#team">Team</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="hero">
+  <div class="wrap">
+    <p class="event">
+      <span>22 October 2026</span>
+      <span>Maharishi University, Lucknow Campus</span>
+    </p>
+    <svg class="shield" viewBox="0 0 64 74" role="img" aria-label="SURAKSHA NER shield logo">
+      <path d="M32 3 6 13v20c0 18 11 31 26 38 15-7 26-20 26-38V13z" fill="#fff" stroke="#1f5fbf" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M32 18c8 10 12 16 12 23a12 12 0 0 1-24 0c0-7 4-13 12-23z" fill="#0e9aa7"/>
+      <path d="M32 30c4 5 6 8 6 12a6 6 0 0 1-12 0c0-4 2-7 6-12z" fill="#2e9e5b"/>
+    </svg>
+    <h1>SURAKSHA <span>NER</span></h1>
+    <p class="tagline">Landslide &amp; Flood Intelligence<i>|</i>Early Warning<i>|</i>Citizen Safety</p>
+    <p class="lede">A prototype for Northeast India that turns rainfall data and citizen photo reports into clear risk warnings and safer-route awareness.</p>
+    <div class="cta">
+      <a class="btn primary" href="#video">Watch the working demo</a>
+      <a class="btn ghost" href="#project">See how it works</a>
+    </div>
+  </div>
+</section>
+
+<div class="presented">
+  <div class="wrap">
+    <p>Presented by</p>
+    <h3>Maharishi School of Engineering and Technology (MSOET)</h3>
+    <span>Maharishi University of Information Technology, Noida Campus</span>
+  </div>
+</div>
+
+<section id="project">
+  <div class="wrap trio">
+    <article class="panel challenge">
+      <h2><b></b>The challenge</h2>
+      <p>Intense rainfall can trigger landslides, flooding and road blockages. Communities need timely, local warnings.</p>
+    </article>
+    <article class="panel solution">
+      <h2><b></b>Our solution</h2>
+      <p>Map-based risk monitoring, rainfall indicators, citizen photo reports, alerts and safer-route awareness.</p>
+      <p class="proto">This is a prototype, not an operational emergency service.</p>
+    </article>
+    <article class="panel features">
+      <h2><b></b>Key features</h2>
+      <ul class="flist">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6 7-12a7 7 0 0 0-14 0c0 6 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg><div><strong>Live risk map</strong><span>Zone-wise risk at a glance</span></div></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 16a4 4 0 1 1 1-7.9A5 5 0 0 1 18 10a3 3 0 0 1 0 6z"/><path d="M9 19v2M13 19v2M17 19v2"/></svg><div><strong>Rainfall &amp; forecast</strong><span>Current and expected rain</span></div></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg><div><strong>Citizen hazard report</strong><span>Send a photo and location</span></div></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 20h20z"/><path d="M12 10v4M12 17v.5"/></svg><div><strong>Alerts &amp; safer routing</strong><span>Warnings and open roads</span></div></li>
+      </ul>
+    </article>
+  </div>
+</section>
+
+<section id="preview" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Authority dashboard</h2>
+      <p>District teams see monitored zones, active alerts and pending citizen reports, and the factors behind each zone's risk score.</p>
+    </div>
+    <div class="dash" aria-label="Illustration of the authority dashboard">
+      <div class="side">
+        <b>SURAKSHA NER</b>
+        <span class="on">Dashboard</span><span>Live Map</span><span>Landslide Risk</span><span>Rainfall &amp; Forecast</span><span>Flood Simulation</span><span>Citizen Reports</span><span>Alerts &amp; Notifications</span><span>Routing &amp; Accessibility</span><span>Data &amp; Reports</span><span>User Management</span><span>Settings</span>
+      </div>
+      <div class="main">
+        <h3>Authority Dashboard · Kamrup Metropolitan, Assam</h3>
+        <div class="stats">
+          <div class="stat"><strong>8</strong>Monitored zones</div>
+          <div class="stat"><strong>3</strong>High risk zones</div>
+          <div class="stat"><strong>2</strong>Moderate risk zones</div>
+          <div class="stat"><strong>2</strong>Low risk zones</div>
+          <div class="stat"><strong>5</strong>Active alerts</div>
+          <div class="stat"><strong>12</strong>Citizen reports</div>
+        </div>
+        <div class="row">
+          <div class="map" role="img" aria-label="Heat map showing three high risk areas"></div>
+          <div class="zone">
+            <strong>Selected zone: Landslide, Maneipongaso</strong>
+            <div class="score"><div class="ring"><b>71</b></div><div>Risk level: High<br><span style="color:var(--muted)">Confidence 0.91</span></div></div>
+            <strong>Key contributing factors</strong>
+            <div class="bar"><span>High slope</span><span>34%</span><i style="--w:34%"></i></div>
+            <div class="bar"><span>Proximity to drainage</span><span>26%</span><i style="--w:26%"></i></div>
+            <div class="bar"><span>Uncovered road</span><span>24%</span><i style="--w:24%"></i></div>
+            <div class="bar"><span>Historical landslide activity</span><span>16%</span><i style="--w:16%"></i></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="caption">Illustration based on the prototype's demo data.</p>
+
+    <div class="sec-head" style="margin-top:64px">
+      <h2>Citizen app</h2>
+      <p>Residents see current conditions and nearby alerts, and report a landslide, flood or blocked road in a few taps.</p>
+    </div>
+    <div class="phones">
+      <figure>
+        <div class="phone"><div class="screen">
+          <h4>SURAKSHA NER</h4>
+          <div class="cond"><div>Temperature<b>24°C</b></div><div>Rainfall<b>109 mm</b></div></div>
+          <div class="alertbtn">Report hazard<br><small>Landslide, flood or road blockage</small></div>
+          <strong style="color:var(--navy)">Nearby alerts</strong>
+          <div class="item hi">High landslide risk</div>
+          <div class="item">Road blockage</div>
+          <div class="item">Rising water</div>
+        </div></div>
+        <figcaption class="phone-cap">Home and alerts</figcaption>
+      </figure>
+      <figure>
+        <div class="phone"><div class="screen">
+          <h4>Report hazard</h4>
+          <span style="color:var(--muted)">Kamrup Metropolitan, Assam · Step 2 of 3</span>
+          <div class="capture">Capture photo</div>
+          <div class="field">Your location: Kamrup Metropolitan, Assam</div>
+          <div class="field">Example: water is rising near the affected road…</div>
+          <div class="next">Go to step 3</div>
+        </div></div>
+        <figcaption class="phone-cap">Photo report</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section id="how" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>How it works</h2>
+      <p>One flow from rain on the ground to a safer route for residents.</p>
+    </div>
+    <ol class="flow">
+      <li><strong>Collect data</strong><span>Rainfall and sensor readings feed the system.</span></li>
+      <li><strong>Score the risk</strong><span>An explainable score ranks each zone: Low, Moderate, High or Critical.</span></li>
+      <li><strong>Raise alerts</strong><span>High-risk zones trigger warnings for authorities and residents.</span></li>
+      <li><strong>Verify reports</strong><span>Citizens send photo reports and field officers verify them.</span></li>
+      <li><strong>Suggest a safer route</strong><span>Blocked roads lead to an alternative route recommendation.</span></li>
+    </ol>
+  </div>
+</section>
+
+<section id="video" class="video-sec">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Working demo video</h2>
+      <p>A recorded walkthrough of the prototype: risk map, rainfall, citizen report, alert and safer route. The interactive version will replace this page soon.</p>
+    </div>
+    <div class="player">
+      <iframe src="https://www.youtube-nocookie.com/embed/h1nxljcoThY" title="SURAKSHA NER project video" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+    </div>
+    <div class="vlinks">
+      <a class="btn ghost" href="https://youtu.be/h1nxljcoThY?si=ki8MXraGrND0TgkI" target="_blank" rel="noopener">Open on YouTube</a>
+      <small>If the video does not play here, open it on YouTube.</small>
+    </div>
+  </div>
+</section>
+
+<section id="details" style="padding-top:0">
+  <div class="wrap details">
+    <article class="panel">
+      <h2>Project details</h2>
+      <p>A disaster-intelligence prototype for landslide and flood early warning in Northeast India. The pilot area is Kamrup Metropolitan, Assam. It has two parts: a command center for district authorities and field teams, and a mobile-first app for citizens.</p>
+      <div class="chips"><span>React</span><span>TypeScript</span><span>Vite</span><span>Tailwind CSS</span><span>Recharts</span><span>Interactive maps</span></div>
+    </article>
+    <article class="panel">
+      <h2>Current status</h2>
+      <ul class="status">
+        <li class="ok">Dashboard, live map, sensors, risk analysis, rainfall forecast, citizen reports, alerts, routing and settings are built.</li>
+        <li class="ok">Citizen app with hazard reporting, offline mode, alerts and safety tips is built.</li>
+        <li>All data is demo data. Live data feeds are not connected yet.</li>
+        <li>Prototype only. Not an operational emergency service.</li>
+      </ul>
+    </article>
+  </div>
+</section>
+
+<section id="team">
+  <div class="wrap">
+    <h2 class="teamname">Team Echo Engineers</h2>
+    <div class="team">
+      <article class="member"><div class="avatar" aria-hidden="true">AT</div><h3>Aditya Tripathi</h3><p>B.Tech CSE, 3rd year<br>Data Science</p></article>
+      <article class="member"><div class="avatar" aria-hidden="true">AC</div><h3>Aman Chaudhary</h3><p>B.Tech CSE, 3rd year<br>Data Science</p></article>
+      <article class="member"><div class="avatar" aria-hidden="true">AG</div><h3>Aryan Gupta</h3><p>B.Tech CSE, 3rd year<br>Data Science</p></article>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Maharishi University 7th Convocation 2026 · 22 October 2026 · Lucknow Campus</p>
+    <p style="margin-top:6px">SURAKSHA NER is a prototype and not an operational emergency service. <a href="assets/poster.jpeg" target="_blank" rel="noopener">View the poster</a></p>
+  </div>
+</footer>
+</body>
+</html>
